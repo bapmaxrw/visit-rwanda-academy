@@ -138,7 +138,7 @@ function Index() {
         <Reveal className="relative mx-auto flex h-full max-w-6xl flex-col justify-end px-6 pb-16">
           <p className="eyebrow">Lakes & landscapes</p>
           <h2 className="mt-3 max-w-2xl text-5xl md:text-6xl">Sunsets over Lake Kivu</h2>
-          <Link to="/destinations/lake-kivu" className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-accent px-6 py-3 font-semibold text-accent-foreground">Discover the lakes <ArrowRight className="h-4 w-4" /></Link>
+          <Link to="/destinations/$slug" params={{ slug: "lake-kivu" }} className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-accent px-6 py-3 font-semibold text-accent-foreground">Discover the lakes <ArrowRight className="h-4 w-4" /></Link>
         </Reveal>
       </section>
 
