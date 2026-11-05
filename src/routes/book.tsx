@@ -4,7 +4,7 @@ import { CheckCircle2 } from "lucide-react";
 import { attractions, nyungwe } from "@/data/attractions";
 
 export const Route = createFileRoute("/book")({
-  validateSearch: (s: Record<string, unknown>) => ({ attraction: typeof s.attraction === "string" ? s.attraction : undefined }),
+  validateSearch: (s: Record<string, unknown>): { attraction?: string } => ({ attraction: typeof s["attraction"] === "string" ? (s["attraction"] as string) : undefined }),
   head: () => ({
     meta: [
       { title: "Book Your Rwanda Experience | Visit Rwanda" },
