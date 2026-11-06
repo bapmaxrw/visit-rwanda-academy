@@ -1,0 +1,4 @@
+- [ ] Fix booking TypeScript error and verify preview.
+- [ ] Add visitor signup, sign-in, sign-out and basic profile editing.
+- [ ] Save owner-only pending bookings and show booking history.
+- [ ] Test authenticated booking flow and access restrictions.

@@ -2,6 +2,8 @@ import { Link } from "@tanstack/react-router";
 import { motion, useScroll, useSpring } from "framer-motion";
 import { useEffect, useState, type ReactNode } from "react";
 import { Menu, X, Mountain } from "lucide-react";
+import { Button } from '@/components/ui/button';
+import { useVisitorSession } from './VisitorSession';
 
 export function ScrollProgress() {
   const { scrollYProgress } = useScroll();
@@ -17,6 +19,7 @@ const links = [
 ] as const;
 
 export function Navbar() {
+  const { user, loading } = useVisitorSession();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   useEffect(() => {
@@ -40,12 +43,13 @@ export function Navbar() {
             </Link>
           ))}
         </div>
-        <Link to="/book" className="hidden rounded-full bg-accent px-5 py-2 text-sm font-semibold text-accent-foreground transition hover:shadow-glow md:inline-flex">Book now</Link>
-        <button className="md:hidden" aria-label="Menu" onClick={() => setOpen(!open)}>{open ? <X /> : <Menu />}</button>
+        <Button asChild variant="outline" className="hidden md:inline-flex"><Link to={user ? '/account' : '/auth'}>{loading ? 'Account' : user ? 'My bookings' : 'Sign in'}</Link></Button>
+        <Button variant="ghost" size="icon" className="md:hidden" aria-label="Menu" onClick={() => setOpen(!open)}>{open ? <X /> : <Menu />}</Button>
       </nav>
       {open && (
         <div className="glass-strong mx-auto mt-2 flex max-w-6xl flex-col rounded-3xl p-4 md:hidden">
           {links.map((l) => <Link key={l.to} to={l.to} onClick={() => setOpen(false)} className="rounded-xl px-4 py-3">{l.label}</Link>)}
+          <Button asChild variant="outline"><Link to={user ? '/account' : '/auth'} onClick={() => setOpen(false)}>{user ? 'My bookings' : 'Sign in'}</Link></Button>
         </div>
       )}
     </header>

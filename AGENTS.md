@@ -28,3 +28,7 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+- Visitor data is accessed through authenticated server functions and owner-scoped RLS; only the pending booking insert and profile edits are visitor-writable.
+- Visitor identity transitions are subscribed once by the root VisitorSession provider; sign-out cancels and clears private queries before navigation.
+- Private account pages live under the client-only authenticated layout, while booking discovery and authentication pages remain public.

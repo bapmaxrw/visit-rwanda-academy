@@ -40,6 +40,9 @@
 }
 
 :root {
+  --google-background: #131314;
+  --google-border: #8e918f;
+  --google-foreground: #e3e3e3;
   --radius: 1rem;
   --background: oklch(0.17 0.012 160);
   --foreground: oklch(0.97 0.008 120);
@@ -71,6 +74,8 @@
   --shadow-glow: 0 0 18px color-mix(in oklab, var(--gold) 60%, transparent);
   --shadow-elegant: 0 30px 60px -20px oklch(0 0 0 / 55%);
 }
+
+.google-signin { background: var(--google-background); border-color: var(--google-border); color: var(--google-foreground); }
 
 @layer base {
   * { border-color: var(--color-border); }

@@ -13,6 +13,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Navbar, Footer, ScrollProgress } from "@/components/site/Chrome";
+import { VisitorSession } from '@/components/site/VisitorSession';
 
 function NotFoundComponent() {
   return (
@@ -93,12 +94,14 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <VisitorSession>
       <ScrollProgress />
       <Navbar />
       <main>
         <Outlet />
       </main>
       <Footer />
+      </VisitorSession>
     </QueryClientProvider>
   );
 }
