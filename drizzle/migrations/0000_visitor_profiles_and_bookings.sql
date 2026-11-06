@@ -1,0 +1,18 @@
+CREATE TABLE public.profiles (id uuid PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE, display_name text NOT NULL DEFAULT '', phone text NOT NULL DEFAULT '', created_at timestamptz NOT NULL DEFAULT now());
+GRANT SELECT, UPDATE ON public.profiles TO authenticated;
+GRANT ALL ON public.profiles TO service_role;
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+CREATE POLICY profiles_read_own ON public.profiles FOR SELECT TO authenticated USING (id = auth.uid());
+CREATE POLICY profiles_update_own ON public.profiles FOR UPDATE TO authenticated USING (id = auth.uid()) WITH CHECK (id = auth.uid());
+CREATE FUNCTION public.create_visitor_profile() RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$ BEGIN INSERT INTO public.profiles (id, display_name) VALUES (NEW.id, coalesce(NEW.raw_user_meta_data->>'display_name', '')); RETURN NEW; END; $$;
+CREATE TRIGGER create_visitor_profile AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION public.create_visitor_profile();
+INSERT INTO public.profiles (id, display_name) SELECT id, coalesce(raw_user_meta_data->>'display_name', '') FROM auth.users ON CONFLICT DO NOTHING;
+CREATE TABLE public.bookings (id uuid PRIMARY KEY DEFAULT gen_random_uuid(), user_id uuid NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE, reference text NOT NULL UNIQUE DEFAULT ('VR-' || upper(replace(gen_random_uuid()::text, '-', ''))), full_name text NOT NULL, email text NOT NULL, phone text NOT NULL, nationality text NOT NULL, attraction_slug text NOT NULL, visiting_date date NOT NULL, preferred_time text NOT NULL CHECK (preferred_time IN ('Morning', 'Afternoon')), visitors integer NOT NULL CHECK (visitors BETWEEN 1 AND 20), experience text NOT NULL DEFAULT '', special_requests text NOT NULL DEFAULT '', status text NOT NULL DEFAULT 'Pending' CHECK (status IN ('Pending', 'Approved', 'Rejected', 'Cancelled')), created_at timestamptz NOT NULL DEFAULT now());
+GRANT SELECT, INSERT ON public.bookings TO authenticated;
+GRANT ALL ON public.bookings TO service_role;
+ALTER TABLE public.bookings ENABLE ROW LEVEL SECURITY;
+CREATE POLICY bookings_read_own ON public.bookings FOR SELECT TO authenticated USING (user_id = auth.uid());
+CREATE POLICY bookings_insert_own_pending ON public.bookings FOR INSERT TO authenticated WITH CHECK (user_id = auth.uid() AND status = 'Pending');
+CREATE INDEX bookings_owner_created ON public.bookings(user_id, created_at DESC);
+CREATE FUNCTION public.validate_booking_date() RETURNS trigger LANGUAGE plpgsql SET search_path = public AS $$ BEGIN IF NEW.visiting_date < (now() AT TIME ZONE 'Africa/Kigali')::date THEN RAISE EXCEPTION 'Visiting date cannot be in the past'; END IF; RETURN NEW; END; $$;
+CREATE TRIGGER validate_booking_date BEFORE INSERT ON public.bookings FOR EACH ROW EXECUTE FUNCTION public.validate_booking_date();
