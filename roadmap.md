@@ -1,4 +1,6 @@
-- [ ] Fix booking TypeScript error and verify preview.
-- [ ] Add visitor signup, sign-in, sign-out and basic profile editing.
-- [ ] Save owner-only pending bookings and show booking history.
-- [ ] Test authenticated booking flow and access restrictions.
+- [ ] Add owner-only pending booking cancellation and secure administrator booking management.
+- [ ] Add personalized AI itineraries with dates, interests, budget and bookable destinations.
+- [ ] Redesign public booking discovery, verified pricing and booking summary.
+- [ ] Add gallery, articles, search and administrator notifications.
+- [ ] Configure booking emails if a verified sending domain is available.
+- [ ] Test real account flows and rename the published address to visit-rwanda-academy.
