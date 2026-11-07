@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useVisitorSession } from '@/components/site/VisitorSession';
 
 export const Route = createFileRoute('/auth')({
-  validateSearch: (s: Record<string, unknown>): { attraction?: string } => ({ attraction: typeof s.attraction === 'string' ? s.attraction : undefined }),
+  validateSearch: (s: Record<string, unknown>): { attraction?: string | undefined } => ({ attraction: typeof s['attraction'] === 'string' ? s['attraction'] : undefined }),
   head: () => ({ meta: [{ title: 'Visitor Sign In | Visit Rwanda' }, { name: 'description', content: 'Sign in or create your Visit Rwanda visitor account.' }, { property: 'og:title', content: 'Visitor Sign In | Visit Rwanda' }, { property: 'og:description', content: 'Access your Rwanda booking history.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }] }),
   component: Auth,
 });
