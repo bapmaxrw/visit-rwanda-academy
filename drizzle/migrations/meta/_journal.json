@@ -8,6 +8,13 @@
       "when": 1793937663069,
       "tag": "0000_visitor_profiles_and_bookings",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794025265247,
+      "tag": "0001_booking_controls_admin_and_itineraries",
+      "breakpoints": true
     }
   ]
 }

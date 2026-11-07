@@ -14,10 +14,65 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_feature_state: {
+        Row: {
+          blocked: boolean
+          feature: string
+          reason: string
+        }
+        Insert: {
+          blocked?: boolean
+          feature: string
+          reason?: string
+        }
+        Update: {
+          blocked?: boolean
+          feature?: string
+          reason?: string
+        }
+        Relationships: []
+      }
+      booking_events: {
+        Row: {
+          actor_id: string
+          booking_id: string
+          created_at: string
+          id: string
+          previous_status: string
+          status: string
+        }
+        Insert: {
+          actor_id: string
+          booking_id: string
+          created_at?: string
+          id?: string
+          previous_status: string
+          status: string
+        }
+        Update: {
+          actor_id?: string
+          booking_id?: string
+          created_at?: string
+          id?: string
+          previous_status?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "booking_events_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bookings: {
         Row: {
           attraction_slug: string
+          children: number
           created_at: string
+          currency: string | null
           email: string
           experience: string
           full_name: string
@@ -25,16 +80,23 @@ export type Database = {
           nationality: string
           phone: string
           preferred_time: string
+          price_id: string | null
+          price_source: string | null
+          price_verified_on: string | null
           reference: string
           special_requests: string
           status: string
+          total_price: number | null
           user_id: string
           visiting_date: string
+          visitor_category: string
           visitors: number
         }
         Insert: {
           attraction_slug: string
+          children?: number
           created_at?: string
+          currency?: string | null
           email: string
           experience?: string
           full_name: string
@@ -42,16 +104,23 @@ export type Database = {
           nationality: string
           phone: string
           preferred_time: string
+          price_id?: string | null
+          price_source?: string | null
+          price_verified_on?: string | null
           reference?: string
           special_requests?: string
           status?: string
+          total_price?: number | null
           user_id: string
           visiting_date: string
+          visitor_category?: string
           visitors: number
         }
         Update: {
           attraction_slug?: string
+          children?: number
           created_at?: string
+          currency?: string | null
           email?: string
           experience?: string
           full_name?: string
@@ -59,16 +128,105 @@ export type Database = {
           nationality?: string
           phone?: string
           preferred_time?: string
+          price_id?: string | null
+          price_source?: string | null
+          price_verified_on?: string | null
           reference?: string
           special_requests?: string
           status?: string
+          total_price?: number | null
           user_id?: string
           visiting_date?: string
+          visitor_category?: string
           visitors?: number
         }
         Relationships: [
           {
+            foreignKeyName: "bookings_price_id_fkey"
+            columns: ["price_id"]
+            isOneToOne: false
+            referencedRelation: "destination_prices"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "bookings_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      destination_prices: {
+        Row: {
+          active: boolean
+          activity: string
+          adult_price: number
+          attraction_slug: string
+          child_age_max: number | null
+          child_price: number | null
+          currency: string
+          id: string
+          notes: string
+          source_url: string
+          verified_on: string
+          visitor_category: string
+        }
+        Insert: {
+          active?: boolean
+          activity: string
+          adult_price: number
+          attraction_slug: string
+          child_age_max?: number | null
+          child_price?: number | null
+          currency: string
+          id?: string
+          notes?: string
+          source_url: string
+          verified_on: string
+          visitor_category: string
+        }
+        Update: {
+          active?: boolean
+          activity?: string
+          adult_price?: number
+          attraction_slug?: string
+          child_age_max?: number | null
+          child_price?: number | null
+          currency?: string
+          id?: string
+          notes?: string
+          source_url?: string
+          verified_on?: string
+          visitor_category?: string
+        }
+        Relationships: []
+      }
+      itineraries: {
+        Row: {
+          created_at: string
+          id: string
+          plan: Json
+          preferences: Json
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          plan: Json
+          preferences: Json
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          plan?: Json
+          preferences?: Json
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "itineraries_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -97,15 +255,44 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      admin_booking_status: {
+        Args: { _booking_id: string; _status: string }
+        Returns: string
+      }
+      cancel_pending_booking: { Args: { _booking_id: string }; Returns: string }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -232,6 +419,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
