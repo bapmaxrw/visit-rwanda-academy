@@ -29,6 +29,7 @@ use the editor.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
 
-- Visitor data is accessed through authenticated server functions and owner-scoped RLS; only the pending booking insert and profile edits are visitor-writable.
+- Visitor data uses authenticated server functions and owner-scoped RLS; cancellation and administrator status changes use narrow authorized database functions, while price snapshots are calculated by an insert trigger to prevent manipulation.
+- Administrator roles live in protected user_roles rows, never user-editable metadata; itinerary ownership and durable AI pause state are enforced in the database.
 - Visitor identity transitions are subscribed once by the root VisitorSession provider; sign-out cancels and clears private queries before navigation.
 - Private account pages live under the client-only authenticated layout, while booking discovery and authentication pages remain public.
