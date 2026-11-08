@@ -15,6 +15,13 @@
       "when": 1794025265247,
       "tag": "0001_booking_controls_admin_and_itineraries",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794113897779,
+      "tag": "0002_administrator_activity_log",
+      "breakpoints": true
     }
   ]
 }

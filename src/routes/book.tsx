@@ -10,7 +10,7 @@ import { CheckCircle2 } from "lucide-react";
 import { attractions, nyungwe } from "@/data/attractions";
 
 export const Route = createFileRoute("/book")({
-  validateSearch: (s: Record<string, unknown>): { attraction?: string | undefined } => ({ attraction: typeof s["attraction"] === "string" ? s["attraction"] : undefined }),
+  validateSearch: (s: Record<string, unknown>): { attraction?: string | undefined; date?: string | undefined; time?: string | undefined; experience?: string | undefined } => ({ attraction: typeof s["attraction"] === "string" ? s["attraction"] : undefined, date: typeof s['date'] === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s['date']) ? s['date'] : undefined, time: s['time'] === 'Morning' || s['time'] === 'Afternoon' ? s['time'] : undefined, experience: typeof s['experience'] === 'string' ? s['experience'].slice(0,500) : undefined }),
   head: () => ({
     meta: [
       { title: "Book Your Rwanda Experience | Visit Rwanda" },
@@ -27,7 +27,7 @@ export const Route = createFileRoute("/book")({
 const field = "w-full rounded-xl border border-input bg-glass px-4 py-3 outline-none transition focus:border-ring";
 
 function Book() {
-  const { attraction } = Route.useSearch();
+  const { attraction, date, time, experience } = Route.useSearch();
   const [ref, setRef] = useState<string | null>(null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -77,10 +77,10 @@ function Book() {
               {attractions.map((a) => <option key={a.slug} value={a.slug} className="bg-background">{a.name}</option>)}
             </select>
           </L>
-          <L label="Date"><input name="visiting_date" required type="date" min={today} className={field} /></L>
-          <L label="Preferred time"><select name="preferred_time" className={field}><option className="bg-background">Morning</option><option className="bg-background">Afternoon</option></select></L>
+          <L label="Date"><input name="visiting_date" required type="date" min={today} defaultValue={date} className={field} /></L>
+          <L label="Preferred time"><select name="preferred_time" defaultValue={time} className={field}><option className="bg-background">Morning</option><option className="bg-background">Afternoon</option></select></L>
           <L label="Visitors"><input name="visitors" required type="number" min={1} max={20} defaultValue={2} className={field} /></L>
-          <L label="Experience"><input name="experience" placeholder="e.g. Guided tour" className={field} /></L>
+          <L label="Experience"><input name="experience" defaultValue={experience} placeholder="e.g. Guided tour" className={field} /></L>
           <L label="Special requests" full><textarea name="special_requests" rows={3} className={field} /></L>
           {error && <p role="alert" className="text-gold md:col-span-2">{error}</p>}
           <Button disabled={busy} className="h-12 rounded-full bg-accent font-semibold text-accent-foreground md:col-span-2">{busy ? 'Saving request…' : 'Request booking'}</Button>

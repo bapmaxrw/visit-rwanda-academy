@@ -6,8 +6,9 @@ import { visitorAccount, updateProfile } from '@/lib/visitor.functions';
 import { Button } from '@/components/ui/button';
 import { useVisitorSession } from '@/components/site/VisitorSession';
 import { attractions } from '@/data/attractions';
+import { administratorAccess } from '@/lib/admin.functions';
 
-const accountOptions = () => queryOptions({ queryKey: ['visitor-account'], queryFn: () => visitorAccount() });
+const accountOptions = () => queryOptions({ queryKey: ['visitor-account'], queryFn: async () => ({ ...await visitorAccount(), isAdmin: await administratorAccess() }) });
 export const Route = createFileRoute('/_authenticated/account')({
   loader: ({ context }) => context.queryClient.ensureQueryData(accountOptions()),
   head: () => ({ meta: [{ title: 'My Bookings & Profile | Visit Rwanda' }, { name: 'description', content: 'Review your Rwanda bookings and manage your visitor profile.' }, { property: 'og:title', content: 'My Bookings & Profile | Visit Rwanda' }, { property: 'og:description', content: 'Your visitor account and booking history.' }, { property: 'og:type', content: 'website' }, { name: 'twitter:card', content: 'summary_large_image' }] }), component: Account,
@@ -21,6 +22,7 @@ function Account() {
   const [busy, setBusy] = useState(false);
   return <section className="mx-auto min-h-screen max-w-5xl px-6 pb-24 pt-36">
     <div className="flex flex-wrap items-center justify-between gap-4"><div><p className="eyebrow">Visitor account</p><h1 className="mt-3 text-4xl">My bookings</h1></div><Button variant="outline" onClick={() => signOut().catch(() => setMessage('Unable to sign out. Try again.'))}>Sign out</Button></div>
+    <div className="mt-6 flex flex-wrap gap-3"><Button asChild variant="outline"><Link to="/my-itineraries">My itineraries</Link></Button>{data.isAdmin && <Button asChild variant="outline"><Link to="/admin-activity">Administrator activity</Link></Button>}</div>
     <div className="mt-10 grid gap-5">
       {!data.bookings.length && <div className="border-y border-border py-10"><p className="text-muted-foreground">No booking requests yet.</p><Button asChild className="mt-5"><Link to="/book">Book an experience</Link></Button></div>}
       {data.bookings.map(booking => { const destination = attractions.find(a => a.slug === booking.attraction_slug); return <article key={booking.id} className="grid gap-4 rounded-lg border border-border bg-card p-5 sm:grid-cols-[100px_1fr_auto]">

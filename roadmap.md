@@ -1,4 +1,5 @@
 - [ ] Add owner-only pending booking cancellation and secure administrator booking management.
+- [ ] Add administrator activity history with actor identity, action details and timestamps.
 - [ ] Add personalized AI itineraries with dates, interests, budget and bookable destinations.
 - [ ] Redesign public booking discovery, verified pricing and booking summary.
 - [ ] Add gallery, articles, search and administrator notifications.
