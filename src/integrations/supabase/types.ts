@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_activity_log: {
+        Row: {
+          action: string
+          actor_email: string
+          actor_id: string | null
+          actor_name: string
+          created_at: string
+          details: Json
+          id: string
+          resource_id: string
+          resource_type: string
+        }
+        Insert: {
+          action: string
+          actor_email?: string
+          actor_id?: string | null
+          actor_name: string
+          created_at?: string
+          details?: Json
+          id?: string
+          resource_id: string
+          resource_type: string
+        }
+        Update: {
+          action?: string
+          actor_email?: string
+          actor_id?: string | null
+          actor_name?: string
+          created_at?: string
+          details?: Json
+          id?: string
+          resource_id?: string
+          resource_type?: string
+        }
+        Relationships: []
+      }
       ai_feature_state: {
         Row: {
           blocked: boolean
