@@ -14,10 +14,14 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BookRouteImport } from './routes/book'
+import { Route as ItineraryRouteImport } from './routes/itinerary'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
+import { Route as AuthenticatedAdminActivityRouteImport } from './routes/_authenticated/admin-activity'
+import { Route as AuthenticatedMyItinerariesRouteImport } from './routes/_authenticated/my-itineraries'
 import { Route as DestinationsIndexRouteImport } from './routes/destinations.index'
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
+import { Route as ApiPublicItineraryRouteImport } from './routes/api/public/itinerary'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -43,6 +47,11 @@ const BookRoute = BookRouteImport.update({
   path: '/book',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ItineraryRoute = ItineraryRouteImport.update({
+  id: '/itinerary',
+  path: '/itinerary',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
@@ -53,6 +62,18 @@ const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
   path: '/account',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAdminActivityRoute =
+  AuthenticatedAdminActivityRouteImport.update({
+    id: '/admin-activity',
+    path: '/admin-activity',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedMyItinerariesRoute =
+  AuthenticatedMyItinerariesRouteImport.update({
+    id: '/my-itineraries',
+    path: '/my-itineraries',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const DestinationsIndexRoute = DestinationsIndexRouteImport.update({
   id: '/destinations/',
   path: '/destinations/',
@@ -63,26 +84,39 @@ const DestinationsSlugRoute = DestinationsSlugRouteImport.update({
   path: '/destinations/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicItineraryRoute = ApiPublicItineraryRouteImport.update({
+  id: '/api/public/itinerary',
+  path: '/api/public/itinerary',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/book': typeof BookRoute
+  '/itinerary': typeof ItineraryRoute
   '/reset-password': typeof ResetPasswordRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/admin-activity': typeof AuthenticatedAdminActivityRoute
+  '/my-itineraries': typeof AuthenticatedMyItinerariesRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/destinations/': typeof DestinationsIndexRoute
+  '/api/public/itinerary': typeof ApiPublicItineraryRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/book': typeof BookRoute
+  '/itinerary': typeof ItineraryRoute
   '/reset-password': typeof ResetPasswordRoute
   '/account': typeof AuthenticatedAccountRoute
+  '/admin-activity': typeof AuthenticatedAdminActivityRoute
+  '/my-itineraries': typeof AuthenticatedMyItinerariesRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/destinations': typeof DestinationsIndexRoute
+  '/api/public/itinerary': typeof ApiPublicItineraryRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -91,10 +125,14 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/book': typeof BookRoute
+  '/itinerary': typeof ItineraryRoute
   '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
+  '/_authenticated/admin-activity': typeof AuthenticatedAdminActivityRoute
+  '/_authenticated/my-itineraries': typeof AuthenticatedMyItinerariesRoute
   '/destinations/$slug': typeof DestinationsSlugRoute
   '/destinations/': typeof DestinationsIndexRoute
+  '/api/public/itinerary': typeof ApiPublicItineraryRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -103,20 +141,28 @@ export interface FileRouteTypes {
     | '/about'
     | '/auth'
     | '/book'
+    | '/itinerary'
     | '/reset-password'
     | '/account'
+    | '/admin-activity'
+    | '/my-itineraries'
     | '/destinations/$slug'
     | '/destinations/'
+    | '/api/public/itinerary'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/auth'
     | '/book'
+    | '/itinerary'
     | '/reset-password'
     | '/account'
+    | '/admin-activity'
+    | '/my-itineraries'
     | '/destinations/$slug'
     | '/destinations'
+    | '/api/public/itinerary'
   id:
     | '__root__'
     | '/'
@@ -124,10 +170,14 @@ export interface FileRouteTypes {
     | '/about'
     | '/auth'
     | '/book'
+    | '/itinerary'
     | '/reset-password'
     | '/_authenticated/account'
+    | '/_authenticated/admin-activity'
+    | '/_authenticated/my-itineraries'
     | '/destinations/$slug'
     | '/destinations/'
+    | '/api/public/itinerary'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -136,9 +186,11 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
   BookRoute: typeof BookRoute
+  ItineraryRoute: typeof ItineraryRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   DestinationsSlugRoute: typeof DestinationsSlugRoute
   DestinationsIndexRoute: typeof DestinationsIndexRoute
+  ApiPublicItineraryRoute: typeof ApiPublicItineraryRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -178,6 +230,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/itinerary': {
+      id: '/itinerary'
+      path: '/itinerary'
+      fullPath: '/itinerary'
+      preLoaderRoute: typeof ItineraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
@@ -190,6 +249,20 @@ declare module '@tanstack/react-router' {
       path: '/account'
       fullPath: '/account'
       preLoaderRoute: typeof AuthenticatedAccountRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/admin-activity': {
+      id: '/_authenticated/admin-activity'
+      path: '/admin-activity'
+      fullPath: '/admin-activity'
+      preLoaderRoute: typeof AuthenticatedAdminActivityRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/my-itineraries': {
+      id: '/_authenticated/my-itineraries'
+      path: '/my-itineraries'
+      fullPath: '/my-itineraries'
+      preLoaderRoute: typeof AuthenticatedMyItinerariesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/destinations/': {
@@ -206,15 +279,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DestinationsSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/itinerary': {
+      id: '/api/public/itinerary'
+      path: '/api/public/itinerary'
+      fullPath: '/api/public/itinerary'
+      preLoaderRoute: typeof ApiPublicItineraryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAccountRoute: typeof AuthenticatedAccountRoute
+  AuthenticatedAdminActivityRoute: typeof AuthenticatedAdminActivityRoute
+  AuthenticatedMyItinerariesRoute: typeof AuthenticatedMyItinerariesRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAccountRoute: AuthenticatedAccountRoute,
+  AuthenticatedAdminActivityRoute: AuthenticatedAdminActivityRoute,
+  AuthenticatedMyItinerariesRoute: AuthenticatedMyItinerariesRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -226,9 +310,11 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
   BookRoute: BookRoute,
+  ItineraryRoute: ItineraryRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   DestinationsSlugRoute: DestinationsSlugRoute,
   DestinationsIndexRoute: DestinationsIndexRoute,
+  ApiPublicItineraryRoute: ApiPublicItineraryRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
