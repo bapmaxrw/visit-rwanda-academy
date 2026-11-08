@@ -15,6 +15,7 @@ const links = [
   { to: "/", label: "Home" },
   { to: "/about", label: "About Rwanda" },
   { to: "/destinations", label: "Destinations" },
+  { to: "/itinerary", label: "Plan a trip" },
   { to: "/book", label: "Book" },
 ] as const;
 
@@ -32,7 +33,7 @@ export function Navbar() {
     <header className="fixed inset-x-0 top-3 z-50 px-4">
       <nav className={`mx-auto flex max-w-6xl items-center justify-between rounded-full px-5 py-3 transition-all duration-500 ${scrolled ? "glass-strong shadow-elegant" : "glass"}`}>
         <Link to="/" className="flex items-center gap-2 font-display text-lg font-semibold">
-          <Mountain className="h-5 w-5 text-gold" /> Visit Rwanda
+          <Mountain className="h-5 w-5 shrink-0 text-gold" /><span>Visit Rwanda Academy</span>
         </Link>
         <div className="hidden items-center gap-1 md:flex">
           {links.map((l) => (

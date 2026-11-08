@@ -33,3 +33,5 @@ use the editor.
 - Administrator roles live in protected user_roles rows, never user-editable metadata; itinerary ownership and durable AI pause state are enforced in the database.
 - Visitor identity transitions are subscribed once by the root VisitorSession provider; sign-out cancels and clears private queries before navigation.
 - Private account pages live under the client-only authenticated layout, while booking discovery and authentication pages remain public.
+- Administrator audit records are written atomically by database triggers with actor identity snapshots and are immutable; only verified administrators can read them.
+- Itinerary generation uses an authenticated streaming server route, grounded catalog validation and owner-only saved plans; Gateway access blocks are persisted before further requests.
