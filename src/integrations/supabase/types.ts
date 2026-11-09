@@ -270,6 +270,45 @@ export type Database = {
           },
         ]
       }
+      itinerary_conversations: {
+        Row: {
+          itinerary_id: string
+          messages: Json
+          revision: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          itinerary_id: string
+          messages?: Json
+          revision?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          itinerary_id?: string
+          messages?: Json
+          revision?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "itinerary_conversations_itinerary_id_fkey"
+            columns: ["itinerary_id"]
+            isOneToOne: true
+            referencedRelation: "itineraries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "itinerary_conversations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
