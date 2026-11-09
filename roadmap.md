@@ -1,3 +1,5 @@
+- [ ] Fix itinerary preview errors and add one account-saved itinerary question conversation.
+- [ ] Continue uploaded platform upgrade: unified trip booking, enhanced profiles/login, and administrator management.
 - [ ] Add owner-only pending booking cancellation and secure administrator booking management.
 - [ ] Add administrator activity history with actor identity, action details and timestamps.
 - [ ] Add personalized AI itineraries with dates, interests, budget and bookable destinations.
