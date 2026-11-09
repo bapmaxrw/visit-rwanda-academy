@@ -35,3 +35,4 @@ use the editor.
 - Private account pages live under the client-only authenticated layout, while booking discovery and authentication pages remain public.
 - Administrator audit records are written atomically by database triggers with actor identity snapshots and are immutable; only verified administrators can read them.
 - Itinerary generation uses an authenticated streaming server route, grounded catalog validation and owner-only saved plans; Gateway access blocks are persisted before further requests.
+- Itinerary questions use AI Elements and one owner-scoped conversation per saved itinerary; server-owned history and trip context prevent cross-trip leakage and client tampering.

@@ -22,6 +22,13 @@
       "when": 1794113897779,
       "tag": "0002_administrator_activity_log",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1794196945893,
+      "tag": "0003_itinerary_question_history",
+      "breakpoints": true
     }
   ]
 }

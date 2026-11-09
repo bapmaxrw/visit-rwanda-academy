@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, type FormEvent } from 'react';
+import { ItineraryQuestions } from '@/components/site/ItineraryQuestions';
 import { Compass, Sparkles, Square, MapPin, ArrowRight, CalendarDays } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useVisitorSession } from '@/components/site/VisitorSession';
@@ -17,13 +18,14 @@ function Itinerary() {
   const { user } = useVisitorSession();
   const [selected, setSelected] = useState<string[]>([]);
   const [plan, setPlan] = useState<ItineraryPlan | null>(null);
+  const [planId, setPlanId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [reasoning, setReasoning] = useState('');
   const [progress, setProgress] = useState('');
   const abort = useRef<AbortController | null>(null);
   useEffect(() => () => abort.current?.abort(), []);
-  async function submit(e: React.FormEvent<HTMLFormElement>) {
+  async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault(); setError('');
     const form = new FormData(e.currentTarget);
     const parsed = itineraryPreferences.safeParse({ startDate: form.get('startDate'), endDate: form.get('endDate'), budget: form.get('budget'), interests: form.get('interests'), destinations: selected });
@@ -46,7 +48,7 @@ function Itinerary() {
           if (event.type === 'reasoning') setReasoning(v => v + event.text);
           if (event.type === 'progress') setProgress(v => v + event.text);
           if (event.type === 'error') throw new Error(event.message);
-          if (event.type === 'complete') { setPlan(event.plan); completed = true; }
+          if (event.type === 'complete') { setPlan(event.plan); setPlanId(event.id); completed = true; }
         }
         if (chunk.done) break;
       }
@@ -69,6 +71,7 @@ function Itinerary() {
       <div className="min-w-0">
         {busy && <div role="status" className="mb-8 border-y border-border py-6"><p className="flex items-center gap-2 font-semibold text-gold"><Sparkles className="size-4"/>{progress ? 'Writing your daily plan…' : 'Planning your journey…'}</p>{reasoning && <details className="mt-4"><summary className="cursor-pointer text-sm text-muted-foreground">Planning notes</summary><p className="mt-3 whitespace-pre-wrap text-sm text-muted-foreground">{reasoning}</p></details>}</div>}
         {plan ? <PlanView plan={plan}/> : <div className="py-8"><img src={attractions[0]?.image} alt="Mountain gorilla in Volcanoes National Park" className="aspect-[16/10] w-full rounded-lg object-cover"/><div className="mt-6 flex items-center gap-3 text-gold"><MapPin className="size-5"/><h2 className="text-2xl">From rainforest to lakeshore</h2></div></div>}
+        {planId && user && <ItineraryQuestions key={`${user.id}-${planId}`} itineraryId={planId}/>}
         <Button asChild variant="link" className="mt-6 px-0"><Link to="/my-itineraries">My saved itineraries<ArrowRight className="size-4"/></Link></Button>
       </div>
     </div>
