@@ -21,6 +21,7 @@ export async function generateItinerary(request: Request, config: { key: string;
   if (state.error) return jsonError('Unable to check itinerary availability.', 503);
   if (state.data?.blocked) return jsonError(state.data.reason, 403);
   let failure: { status: number; message: string } | undefined;
+  const getFailure = () => failure;
   const gateway = createLovableAiGatewayRunIdFetch(request.headers.get('X-Lovable-AIG-Run-ID') ?? undefined);
   const pause = async (reason: string) => {
     const { supabaseAdmin } = await import('@/integrations/supabase/client.server');
@@ -53,10 +54,11 @@ export async function generateItinerary(request: Request, config: { key: string;
   const iterator = result.fullStream[Symbol.asyncIterator]();
   const first = await iterator.next();
   await gateway.waitForRunId();
-  if (failure) {
+   const initialFailure = getFailure();
+   if (initialFailure) {
     // Drain the SDK error event so its stream closes without an unhandled rejection.
     await result.output.catch(() => undefined);
-    return jsonError(failure.message, failure.status);
+     return jsonError(initialFailure.message, initialFailure.status);
   }
   const encoder = new TextEncoder();
   const body = new ReadableStream({
