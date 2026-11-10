@@ -21,7 +21,7 @@ export async function answerItineraryQuestion(request: Request, config: { key: s
   const tripResult = await client.from('itineraries').select('user_id,preferences,plan').eq('id', itineraryId).eq('user_id', userId).maybeSingle();
   if (tripResult.error || !tripResult.data) return error('This itinerary is not available to your account.', 404);
   const trip = ownedItinerary(tripResult.data, userId);
-  const availability = await client.from('ai_feature_state').select('blocked,reason').eq('feature', 'itinerary').maybeSingle();
+  const availability = await client.rpc('itinerary_availability').maybeSingle();
   if (availability.error) return error('Unable to check itinerary availability.', 503);
   if (availability.data?.blocked) return error(availability.data.reason, 403);
   const initialized = await client.from('itinerary_conversations').upsert({ itinerary_id: itineraryId, user_id: userId }, { onConflict: 'itinerary_id', ignoreDuplicates: true });

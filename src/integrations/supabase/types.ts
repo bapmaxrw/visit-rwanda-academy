@@ -309,6 +309,48 @@ export type Database = {
           },
         ]
       }
+      packing_checklists: {
+        Row: {
+          checklist: Json
+          created_at: string
+          id: string
+          itinerary_id: string
+          needs: string
+          user_id: string
+        }
+        Insert: {
+          checklist: Json
+          created_at?: string
+          id?: string
+          itinerary_id: string
+          needs: string
+          user_id: string
+        }
+        Update: {
+          checklist?: Json
+          created_at?: string
+          id?: string
+          itinerary_id?: string
+          needs?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "packing_checklists_itinerary_id_fkey"
+            columns: ["itinerary_id"]
+            isOneToOne: false
+            referencedRelation: "itineraries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "packing_checklists_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -364,6 +406,13 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      itinerary_availability: {
+        Args: never
+        Returns: {
+          blocked: boolean
+          reason: string
+        }[]
       }
     }
     Enums: {

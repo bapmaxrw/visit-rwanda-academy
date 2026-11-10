@@ -1,4 +1,8 @@
 - [ ] Fix itinerary preview errors and add one account-saved itinerary question conversation.
+- [ ] Fix shimmer compatibility and add itinerary-grounded personalized packing checklists.
+- [ ] Add licensed homepage tourism video with playback control and accessible custom cursor.
+- [ ] Complete registration, telephone login, profile uploads, and secure administrator/content management.
+- [ ] Restrict AI pause-state visibility without interrupting itinerary availability checks.
 - [ ] Continue uploaded platform upgrade: unified trip booking, enhanced profiles/login, and administrator management.
 - [ ] Add owner-only pending booking cancellation and secure administrator booking management.
 - [ ] Add administrator activity history with actor identity, action details and timestamps.

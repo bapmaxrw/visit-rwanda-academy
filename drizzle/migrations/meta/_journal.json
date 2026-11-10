@@ -29,6 +29,13 @@
       "when": 1794196945893,
       "tag": "0003_itinerary_question_history",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794281558071,
+      "tag": "0004_private_ai_state_and_packing_checklists",
+      "breakpoints": true
     }
   ]
 }
