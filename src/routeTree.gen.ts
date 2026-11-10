@@ -23,6 +23,7 @@ import { Route as DestinationsIndexRouteImport } from './routes/destinations.ind
 import { Route as DestinationsSlugRouteImport } from './routes/destinations.$slug'
 import { Route as ApiPublicItineraryRouteImport } from './routes/api/public/itinerary'
 import { Route as ApiPublicItineraryQuestionRouteImport } from './routes/api/public/itinerary-question'
+import { Route as ApiPublicPackingRouteImport } from './routes/api/public/packing'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -96,6 +97,11 @@ const ApiPublicItineraryQuestionRoute =
     path: '/api/public/itinerary-question',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicPackingRoute = ApiPublicPackingRouteImport.update({
+  id: '/api/public/packing',
+  path: '/api/public/packing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -111,6 +117,7 @@ export interface FileRoutesByFullPath {
   '/destinations/': typeof DestinationsIndexRoute
   '/api/public/itinerary': typeof ApiPublicItineraryRoute
   '/api/public/itinerary-question': typeof ApiPublicItineraryQuestionRoute
+  '/api/public/packing': typeof ApiPublicPackingRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByTo {
   '/destinations': typeof DestinationsIndexRoute
   '/api/public/itinerary': typeof ApiPublicItineraryRoute
   '/api/public/itinerary-question': typeof ApiPublicItineraryQuestionRoute
+  '/api/public/packing': typeof ApiPublicPackingRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -143,6 +151,7 @@ export interface FileRoutesById {
   '/destinations/': typeof DestinationsIndexRoute
   '/api/public/itinerary': typeof ApiPublicItineraryRoute
   '/api/public/itinerary-question': typeof ApiPublicItineraryQuestionRoute
+  '/api/public/packing': typeof ApiPublicPackingRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -160,6 +169,7 @@ export interface FileRouteTypes {
     | '/destinations/'
     | '/api/public/itinerary'
     | '/api/public/itinerary-question'
+    | '/api/public/packing'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -175,6 +185,7 @@ export interface FileRouteTypes {
     | '/destinations'
     | '/api/public/itinerary'
     | '/api/public/itinerary-question'
+    | '/api/public/packing'
   id:
     | '__root__'
     | '/'
@@ -191,6 +202,7 @@ export interface FileRouteTypes {
     | '/destinations/'
     | '/api/public/itinerary'
     | '/api/public/itinerary-question'
+    | '/api/public/packing'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -205,6 +217,7 @@ export interface RootRouteChildren {
   DestinationsIndexRoute: typeof DestinationsIndexRoute
   ApiPublicItineraryRoute: typeof ApiPublicItineraryRoute
   ApiPublicItineraryQuestionRoute: typeof ApiPublicItineraryQuestionRoute
+  ApiPublicPackingRoute: typeof ApiPublicPackingRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -307,6 +320,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicItineraryQuestionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/packing': {
+      id: '/api/public/packing'
+      path: '/api/public/packing'
+      fullPath: '/api/public/packing'
+      preLoaderRoute: typeof ApiPublicPackingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -337,6 +357,7 @@ const rootRouteChildren: RootRouteChildren = {
   DestinationsIndexRoute: DestinationsIndexRoute,
   ApiPublicItineraryRoute: ApiPublicItineraryRoute,
   ApiPublicItineraryQuestionRoute: ApiPublicItineraryQuestionRoute,
+  ApiPublicPackingRoute: ApiPublicPackingRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
