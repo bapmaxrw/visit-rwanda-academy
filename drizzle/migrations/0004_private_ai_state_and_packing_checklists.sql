@@ -1,0 +1,12 @@
+ALTER POLICY ai_state_read ON public.ai_feature_state USING (public.has_role(auth.uid(),'admin'));
+CREATE FUNCTION public.itinerary_availability() RETURNS TABLE(blocked boolean,reason text) LANGUAGE sql STABLE SECURITY DEFINER SET search_path=public AS $$ SELECT coalesce(s.blocked,false),coalesce(s.reason,'') FROM (SELECT 1) seed LEFT JOIN public.ai_feature_state s ON s.feature='itinerary' WHERE auth.uid() IS NOT NULL $$;
+REVOKE ALL ON FUNCTION public.itinerary_availability() FROM PUBLIC,anon;
+GRANT EXECUTE ON FUNCTION public.itinerary_availability() TO authenticated;
+CREATE TABLE public.packing_checklists(id uuid PRIMARY KEY DEFAULT gen_random_uuid(), itinerary_id uuid NOT NULL REFERENCES public.itineraries(id) ON DELETE CASCADE, user_id uuid NOT NULL REFERENCES public.profiles(id), needs text NOT NULL CHECK(length(needs) BETWEEN 1 AND 3000), checklist jsonb NOT NULL, created_at timestamptz NOT NULL DEFAULT now());
+GRANT SELECT,INSERT,DELETE ON public.packing_checklists TO authenticated;
+GRANT ALL ON public.packing_checklists TO service_role;
+ALTER TABLE public.packing_checklists ENABLE ROW LEVEL SECURITY;
+CREATE POLICY packing_read_own ON public.packing_checklists FOR SELECT TO authenticated USING(user_id=auth.uid());
+CREATE POLICY packing_insert_own ON public.packing_checklists FOR INSERT TO authenticated WITH CHECK(user_id=auth.uid() AND EXISTS(SELECT 1 FROM public.itineraries i WHERE i.id=itinerary_id AND i.user_id=auth.uid()));
+CREATE POLICY packing_delete_own ON public.packing_checklists FOR DELETE TO authenticated USING(user_id=auth.uid());
+CREATE INDEX packing_itinerary_owner ON public.packing_checklists(user_id,itinerary_id,created_at DESC);

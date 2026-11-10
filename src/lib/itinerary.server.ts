@@ -17,7 +17,7 @@ export async function generateItinerary(request: Request, config: { key: string;
   const parsed = itineraryPreferences.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return jsonError(parsed.error.issues[0]?.message ?? 'Check your trip details.', 400);
   const preferences = parsed.data;
-  const state = await client.from('ai_feature_state').select('blocked,reason').eq('feature', 'itinerary').maybeSingle();
+  const state = await client.rpc('itinerary_availability').maybeSingle();
   if (state.error) return jsonError('Unable to check itinerary availability.', 503);
   if (state.data?.blocked) return jsonError(state.data.reason, 403);
   let failure: { status: number; message: string } | undefined;
@@ -57,7 +57,7 @@ export async function generateItinerary(request: Request, config: { key: string;
    const initialFailure = getFailure();
    if (initialFailure) {
     // Drain the SDK error event so its stream closes without an unhandled rejection.
-    await result.output.catch(() => undefined);
+    await Promise.resolve(result.output).catch(() => undefined);
      return jsonError(initialFailure.message, initialFailure.status);
   }
   const encoder = new TextEncoder();
@@ -79,7 +79,7 @@ export async function generateItinerary(request: Request, config: { key: string;
         if (saved.error) throw new Error('Your itinerary could not be saved. Please try again.');
         send({ type: 'complete', plan, id: saved.data.id });
       } catch (error) {
-        await result.output.catch(() => undefined);
+        await Promise.resolve(result.output).catch(() => undefined);
         const stopped = request.signal.aborted || (error instanceof Error && error.name === 'AbortError');
         send({ type: 'error', message: stopped ? 'Itinerary generation stopped.' : failure?.message ?? (error instanceof Error ? error.message : 'Unable to create an itinerary.'), status: stopped ? 499 : failure?.status ?? 500 });
       } finally { controller.close(); }

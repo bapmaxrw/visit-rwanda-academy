@@ -19,7 +19,7 @@ export const generatedPlanSchema = z.object({
     stops: z.array(z.object({ slug: z.string(), time: z.enum(['Morning', 'Afternoon']), activity: z.string(), notes: z.string() }).strict()),
   }).strict()),
 }).strict();
-export type ItineraryPlan = z.infer<typeof generatedPlanSchema> & { days: (z.infer<typeof generatedPlanSchema>['days'][number] & { date: string })[] };
+export type ItineraryPlan = Omit<z.infer<typeof generatedPlanSchema>, 'days'> & { days: (z.infer<typeof generatedPlanSchema>['days'][number] & { date: string })[] };
 export function validateGeneratedPlan(raw: unknown, preferences: ItineraryPreferences): ItineraryPlan {
   const plan = generatedPlanSchema.parse(raw);
   const count = Math.round((Date.parse(preferences.endDate) - Date.parse(preferences.startDate)) / 86400000) + 1;

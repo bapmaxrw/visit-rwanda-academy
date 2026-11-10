@@ -15,7 +15,7 @@ export const administratorActivity = createServerFn({ method: 'GET' }).middlewar
     let query = context.supabase.from('admin_activity_log').select('*', { count: 'exact' }).order('created_at', { ascending: false }).order('id', { ascending: false });
     if (data.actor) query = query.ilike('actor_email', `%${data.actor.replace(/[%_]/g, '')}%`);
     if (data.action !== 'all') query = query.like('action', `${data.action}.%`);
-    if (data.from) query = query.gte('created_at', z.string().datetime().parse(`${data.from}T00:00:00+02:00`));
+    if (data.from) query = query.gte('created_at', z.string().datetime({ offset: true }).parse(`${data.from}T00:00:00+02:00`));
     if (data.to) query = query.lte('created_at', z.string().datetime({ offset: true }).parse(`${data.to}T23:59:59.999+02:00`));
     const result = await query.range(data.page * 25, data.page * 25 + 24);
     if (result.error) throw new Error('Unable to load administrator activity.');
