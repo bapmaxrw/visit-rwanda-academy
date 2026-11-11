@@ -27,15 +27,25 @@ function Hero() {
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+
   useEffect(() => {
     const t = setInterval(() => setI((v) => (v + 1) % words.length), 2400);
     return () => clearInterval(t);
   }, []);
+
   return (
     <section ref={ref} className="relative flex h-screen min-h-[640px] items-center overflow-hidden">
-      {/* Background video will be managed by administrators; image fallback for now */}
-      <motion.img style={{ y }} src={hills} alt="Misty green hills of Rwanda at sunrise" width={1920} height={1088}
-        className="absolute inset-0 h-[120%] w-full scale-105 object-cover" />
+      <video
+        className="hero-video"
+        autoPlay
+        loop
+        muted
+        playsInline
+        poster={hills}
+        aria-label="Rwanda scenic video"
+      >
+        <source src="https://videos.pexels.com/video-files/3195394/3195394-hd_1920_1080.mp4" type="video/mp4" />
+      </video>
       <div className="absolute inset-0 bg-hero-overlay" />
       <div className="relative mx-auto w-full max-w-6xl px-6">
         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="eyebrow">Rwanda – The Land of a Thousand Hills</motion.p>
@@ -49,17 +59,17 @@ function Hero() {
           </span>{" "}
           <br />Rwanda.
         </h1>
-        <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mt-6 max-w-lg text-lg text-muted-foreground">
+        <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="mt-6 max-w-lg text-lg text-white/80">
           Discover. Explore. Experience. Gorillas in the mist, ancient rainforest and lakes that glow at dusk.
         </motion.p>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }} className="mt-10 flex flex-wrap gap-4">
-          <Link to="/destinations" className="group inline-flex items-center gap-2 rounded-full bg-accent px-7 py-4 font-semibold text-accent-foreground transition hover:shadow-glow">
-            Explore Destinations <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+          <Link to="/plan-your-visit" className="group inline-flex items-center gap-2 rounded-full bg-accent px-7 py-4 font-semibold text-accent-foreground transition hover:shadow-glow">
+            Explore Rwanda <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
           </Link>
           <Link to="/book" className="glass inline-flex items-center gap-2 rounded-full px-7 py-4 font-semibold transition hover:bg-glass-border">Book Your Experience</Link>
         </motion.div>
       </div>
-      <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 2 }} className="absolute bottom-8 left-1/2 h-12 w-7 -translate-x-1/2 rounded-full border border-glass-border">
+      <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Infinity, duration: 2 }} className="absolute bottom-8 left-1/2 h-12 w-7 -translate-x-1/2 rounded-full border border-white/30 bg-white/5 backdrop-blur-sm">
         <span className="mx-auto mt-2 block h-2 w-1 rounded-full bg-gold" />
       </motion.div>
     </section>
@@ -85,11 +95,11 @@ function Split({ img, eyebrow, title, text, reverse, to }: { img: string; eyebro
 function Index() {
   const featured = attractions.filter((a) => a.featured);
   const popular = attractions.filter((a) => ["Kigali", "Culture & History"].includes(a.category)).slice(0, 6);
+
   return (
     <>
       <Hero />
 
-      {/* Intro */}
       <section className="mx-auto max-w-6xl px-6 py-28">
         <div className="grid gap-12 md:grid-cols-[1.2fr_1fr]">
           <Reveal>
@@ -99,7 +109,7 @@ function Index() {
           <Reveal delay={0.2}>
             <p className="text-muted-foreground">Rwanda packs volcanoes, rainforests, savannah and Great Rift lakes into a country you can cross in a day. Clean, safe and welcoming, it is one of Africa's most rewarding destinations.</p>
             <div className="mt-8 grid grid-cols-3 gap-3">
-              {[["4", "National parks"], ["1,000", "Hills"], ["5", "Provinces"]].map(([n, l]) => (
+              {[ ["4", "National parks"], ["1,000", "Hills"], ["5", "Provinces"] ].map(([n, l]) => (
                 <div key={l} className="glass rounded-2xl p-4 text-center"><p className="font-display text-3xl text-gold">{n}</p><p className="text-xs text-muted-foreground">{l}</p></div>
               ))}
             </div>
@@ -107,7 +117,6 @@ function Index() {
         </div>
       </section>
 
-      {/* Featured */}
       <section className="mx-auto max-w-6xl px-6 py-16">
         <SectionTitle eyebrow="Featured destinations" title="Where will Rwanda take you?" />
         <div className="grid gap-6 md:grid-cols-3">
@@ -116,7 +125,6 @@ function Index() {
         <div className="mt-10 text-center"><Link to="/destinations" className="glass inline-flex items-center gap-2 rounded-full px-6 py-3">View all {attractions.length} destinations <ArrowRight className="h-4 w-4" /></Link></div>
       </section>
 
-      {/* Popular */}
       <section className="mx-auto max-w-6xl px-6 py-16">
         <SectionTitle eyebrow="Popular attractions" title="City life & living heritage" />
         <div className="flex snap-x gap-5 overflow-x-auto pb-4">
@@ -124,40 +132,34 @@ function Index() {
         </div>
       </section>
 
-      <Split img={gorilla} eyebrow="Wildlife" title="Face to face with mountain gorillas" to="/destinations/volcanoes-national-park"
-        text="Roughly a third of the world's mountain gorillas live in the Virungas. Add chimpanzees in Nyungwe and the Big Five in Akagera, and Rwanda becomes a complete wildlife journey." />
-      <Split reverse img={bisoke} eyebrow="Adventure" title="Hike volcanoes, cycle the Congo Nile Trail" to="/destinations/mount-bisoke"
-        text="Summit crater lakes, kayak Lake Kivu, zipline over Mount Kigali or cross the Nyungwe canopy walkway." />
-      <Split img={culture} eyebrow="Culture" title="Drums, dance and royal heritage" to="/destinations/kings-palace-museum"
-        text="Feel the energy of Intore dancers, visit the King's Palace in Nyanza and share a meal in a community cultural village." />
+      <Split img={gorilla} eyebrow="Wildlife" title="Face to face with mountain gorillas" to="/destinations/volcanoes-national-park" text="Roughly a third of the world's mountain gorillas live in the Virungas. Add chimpanzees in Nyungwe and the Big Five in Akagera, and Rwanda becomes a complete wildlife journey." />
+      <Split reverse img={bisoke} eyebrow="Adventure" title="Hike volcanoes, cycle the Congo Nile Trail" to="/destinations/mount-bisoke" text="Summit crater lakes, kayak Lake Kivu, zipline over Mount Kigali or cross the Nyungwe canopy walkway." />
+      <Split img={culture} eyebrow="Culture" title="Drums, dance and royal heritage" to="/destinations/kings-palace-museum" text="Feel the energy of Intore dancers, visit the King's Palace in Nyanza and share a meal in a community cultural village." />
 
-      {/* Lakes parallax band */}
       <section className="relative my-20 h-[70vh] overflow-hidden">
         <div className="absolute inset-0 bg-fixed bg-cover bg-center" style={{ backgroundImage: `url(${kivu})` }} />
         <div className="absolute inset-0 bg-hero-overlay" />
         <Reveal className="relative mx-auto flex h-full max-w-6xl flex-col justify-end px-6 pb-16">
           <p className="eyebrow">Lakes & landscapes</p>
           <h2 className="mt-3 max-w-2xl text-5xl md:text-6xl">Sunsets over Lake Kivu</h2>
-          <Link to="/destinations/$slug" params={{ slug: "lake-kivu" }} className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-accent px-6 py-3 font-semibold text-accent-foreground">Discover the lakes <ArrowRight className="h-4 w-4" /></Link>
+          <Link to="/destinations/$slug" params={{ slug: "lake-kivu" }} className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-accent px-6 py-3 font-semibold text-accent-foreground">Plan a lakeside escape <ArrowRight className="h-4 w-4" /></Link>
         </Reveal>
       </section>
 
-      {/* Hotels */}
       <section className="mx-auto max-w-6xl px-6 py-16">
         <SectionTitle eyebrow="Stay" title="Where to stay" sub="Accommodation partners will be listed here once verified by our team." />
         <div className="grid gap-6 md:grid-cols-3">
           {[[nyungwe, "Rainforest lodges", "Nyungwe"], [kigali, "City hotels", "Kigali"], [kivu, "Lakeside retreats", "Lake Kivu"]].map(([img, t, p], i) => (
-            <Reveal key={t} delay={i * 0.1}>
+            <Reveal key={String(t)} delay={i * 0.1}>
               <div className="glass overflow-hidden rounded-3xl">
-                <img src={img} alt={t} loading="lazy" className="h-48 w-full object-cover" />
-                <div className="p-6"><h3 className="text-xl">{t}</h3><p className="text-sm text-muted-foreground">{p}</p></div>
+                <img src={String(img)} alt={String(t)} loading="lazy" className="h-48 w-full object-cover" />
+                <div className="p-6"><h3 className="text-xl">{String(t)}</h3><p className="text-sm text-muted-foreground">{String(p)}</p></div>
               </div>
             </Reveal>
           ))}
         </div>
       </section>
 
-      {/* Packages */}
       <section className="mx-auto max-w-6xl px-6 py-16">
         <SectionTitle eyebrow="Packages" title="Curated journeys" />
         <div className="grid gap-6 md:grid-cols-3">
@@ -181,7 +183,6 @@ function Index() {
         </div>
       </section>
 
-      {/* Gallery */}
       <section className="mx-auto max-w-6xl px-6 py-16">
         <SectionTitle eyebrow="Gallery" title="Moments from the hills" />
         <div className="grid auto-rows-[180px] grid-cols-2 gap-4 md:grid-cols-4">
@@ -193,23 +194,35 @@ function Index() {
         </div>
       </section>
 
-      {/* Testimonials */}
       <section className="mx-auto max-w-6xl px-6 py-16">
         <SectionTitle eyebrow="Testimonials" title="Travellers say" sub="Sample testimonials for demonstration." />
         <div className="grid gap-6 md:grid-cols-3">
-          {[["The hour with the gorillas changed how I see the world.", "Sample traveller, UK"], ["Kigali is the cleanest, friendliest city I've visited.", "Sample traveller, Kenya"], ["Akagera surprised us — lions on day one!", "Sample traveller, Germany"]].map(([q, n], i) => (
-            <Reveal key={n} delay={i * 0.1}><div className="glass rounded-3xl p-8"><Quote className="h-6 w-6 text-gold" /><p className="mt-4 font-display text-xl">{q}</p><p className="mt-4 text-sm text-muted-foreground">{n}</p></div></Reveal>
+          {["The hour with the gorillas changed how I see the world.", "Kigali is the cleanest, friendliest city I've visited.", "Akagera gave me the safari experience I had been dreaming about."].map((q, i) => (
+            <Reveal key={q} delay={i * 0.1}>
+              <div className="glass rounded-3xl p-8">
+                <Quote className="h-6 w-6 text-gold" />
+                <p className="mt-4 font-display text-xl">{q}</p>
+                <p className="mt-4 text-sm text-muted-foreground">{["Sample traveller, UK", "Sample traveller, Kenya", "Sample traveller, Rwanda"][i]}</p>
+              </div>
+            </Reveal>
           ))}
         </div>
       </section>
 
-      {/* Travel info */}
       <section className="mx-auto max-w-6xl px-6 py-16">
         <SectionTitle eyebrow="Travel information" title="Before you go" />
         <div className="grid gap-4 md:grid-cols-4">
-          {[[Plane, "Getting there", "Kigali International Airport connects Rwanda to major hubs."], [Sun, "Climate", "Mild year-round; dry seasons June–Sept and Dec–Feb."], [Compass, "Currency", "Rwandan Franc (RWF). Cards accepted in Kigali."], [Shield, "Safety", "Consistently ranked among Africa's safest destinations."]].map(([Icon, t, d]) => {
+          {[[Plane, "Getting there", "Kigali International Airport connects Rwanda to major hubs."], [Sun, "Climate", "Mild year-round; dry seasons June–Sept and Dec–Feb."], [Compass, "Getting around", "Road transfers, domestic flights and guided day tours are straightforward."], [Shield, "Travel safety", "Rwanda is well known for road discipline, cleanliness and visitor security."]].map(([Icon, t, d], i) => {
             const I = Icon as typeof Plane;
-            return <Reveal key={t as string}><div className="glass h-full rounded-3xl p-6"><I className="h-6 w-6 text-sky" /><h3 className="mt-4 text-lg">{t as string}</h3><p className="mt-2 text-sm text-muted-foreground">{d as string}</p></div></Reveal>;
+            return (
+              <Reveal key={String(t)} delay={i * 0.07}>
+                <div className="glass h-full rounded-3xl p-6">
+                  <I className="h-6 w-6 text-sky" />
+                  <h3 className="mt-4 text-lg">{String(t)}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">{String(d)}</p>
+                </div>
+              </Reveal>
+            );
           })}
         </div>
       </section>
@@ -221,6 +234,7 @@ function Index() {
 
 function Newsletter() {
   const [done, setDone] = useState(false);
+
   return (
     <section className="mx-auto max-w-6xl px-6 py-24">
       <Reveal>
