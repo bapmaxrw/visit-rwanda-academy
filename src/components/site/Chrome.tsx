@@ -16,7 +16,7 @@ const links = [
   { to: "/about", label: "About Rwanda" },
   { to: "/destinations", label: "Destinations" },
   { to: "/itinerary", label: "Plan a trip" },
-  { to: "/book", label: "Book" },
+  { to: "/plan-your-visit", label: "Plan Your Visit" },
 ] as const;
 
 export function Navbar() {
@@ -33,7 +33,7 @@ export function Navbar() {
     <header className="fixed inset-x-0 top-3 z-50 px-4">
       <nav className={`mx-auto flex max-w-6xl items-center justify-between rounded-full px-5 py-3 transition-all duration-500 ${scrolled ? "glass-strong shadow-elegant" : "glass"}`}>
         <Link to="/" className="flex items-center gap-2 font-display text-lg font-semibold">
-          <Mountain className="h-5 w-5 shrink-0 text-gold" /><span>Visit Rwanda Academy</span>
+          <Mountain className="h-5 w-5 shrink-0 text-gold" /><span>Visit Rwanda</span>
         </Link>
         <div className="hidden items-center gap-1 md:flex">
           {links.map((l) => (
@@ -44,13 +44,13 @@ export function Navbar() {
             </Link>
           ))}
         </div>
-        <Button asChild variant="outline" className="hidden md:inline-flex"><Link to={user ? '/account' : '/auth'}>{loading ? 'Account' : user ? 'My bookings' : 'Sign in'}</Link></Button>
+        <Button asChild variant="outline" className="hidden md:inline-flex"><Link to={user ? '/account' : '/auth'}>{loading ? 'Account' : user ? 'My account' : 'Sign in'}</Link></Button>
         <Button variant="ghost" size="icon" className="md:hidden" aria-label="Menu" onClick={() => setOpen(!open)}>{open ? <X /> : <Menu />}</Button>
       </nav>
       {open && (
         <div className="glass-strong mx-auto mt-2 flex max-w-6xl flex-col rounded-3xl p-4 md:hidden">
           {links.map((l) => <Link key={l.to} to={l.to} onClick={() => setOpen(false)} className="rounded-xl px-4 py-3">{l.label}</Link>)}
-          <Button asChild variant="outline"><Link to={user ? '/account' : '/auth'} onClick={() => setOpen(false)}>{user ? 'My bookings' : 'Sign in'}</Link></Button>
+          <Button asChild variant="outline"><Link to={user ? '/account' : '/auth'} onClick={() => setOpen(false)}>{user ? 'My account' : 'Sign in'}</Link></Button>
         </div>
       )}
     </header>
@@ -69,14 +69,14 @@ export function Footer() {
           <p className="eyebrow">Explore</p>
           <Link to="/destinations" className="block text-muted-foreground hover:text-foreground">Destinations</Link>
           <Link to="/about" className="block text-muted-foreground hover:text-foreground">About Rwanda</Link>
-          <Link to="/book" className="block text-muted-foreground hover:text-foreground">Book an experience</Link>
+          <Link to="/plan-your-visit" className="block text-muted-foreground hover:text-foreground">Plan Your Visit</Link>
         </div>
         <div className="space-y-2 text-sm text-muted-foreground">
           <p className="eyebrow">Note</p>
           <p>Prices, contacts and opening hours are shown only once verified by our team.</p>
         </div>
       </div>
-      <p className="mx-auto mt-12 max-w-6xl text-xs text-muted-foreground">© {new Date().getFullYear()} Visit Rwanda — demo content for development.</p>
+      <p className="mx-auto mt-12 max-w-6xl text-xs text-muted-foreground">© {new Date().getFullYear()} Visit Rwanda</p>
     </footer>
   );
 }
